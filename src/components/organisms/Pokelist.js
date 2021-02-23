@@ -10,6 +10,7 @@ const PokeList = () => {
   };
   return (
     <FlatList
+      testID="list_pokedex"
       keyExtractor={(item, index) => 'key' + index}
       refreshing={loading}
       data={pokeList}

@@ -15,6 +15,7 @@ const PokeDetail = ({route}) => {
   return (
     <SafeAreaView style={StylesGeneric.container}>
       <TouchableOpacity
+        testID="bt_back"
         onPress={() => {
           goBack();
         }}>

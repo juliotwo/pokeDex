@@ -4,9 +4,10 @@ import {Colors} from '_utils/index';
 import {getHeight, getWidth} from '_utils/dimensions';
 import PokeBall from '../../../assets/pokebola.png';
 import {navigate} from '_utils/navigationService';
-const PokeItem = ({item}) => {
+const PokeItem = ({item, index}) => {
   return (
     <TouchableOpacity
+      testID={'list_' + index}
       onPress={() => navigate('PokeDetail', {poke: item})}
       style={styles.contain}>
       <Text style={styles.text}>{item?.name?.toUpperCase()}</Text>
