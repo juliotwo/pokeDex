@@ -1,13 +1,18 @@
 import {useDispatch, useSelector} from 'react-redux';
 import {setListPoke, seDetailPoke} from '_store/actions/pokeActions';
 
-import {GetPokemonList, GetPokemonDetail} from '_data/apiInterface';
+import {
+  GetPokemonList,
+  GetPokemonDetail,
+  GetMoreDataPoke,
+} from '_data/apiInterface';
 import {useCallback, useEffect} from 'react';
 
 export const usePokeList = (refresh = false) => {
   const pokeList = useSelector((state) => state.poke.pokeList.data);
   const error = useSelector((state) => state.poke.pokeList.error);
   const loading = useSelector((state) => state.poke.pokeList.loading);
+  const urlMore = useSelector((state) => state.poke.pokeList.next);
   const dispatch = useDispatch();
 
   const GetPokeList = useCallback(() => {
@@ -15,7 +20,12 @@ export const usePokeList = (refresh = false) => {
       GetPokemonList()
         .then((data) => {
           dispatch(
-            setListPoke({data: data?.results, loading: false, error: null}),
+            setListPoke({
+              data: data?.results,
+              next: data?.next,
+              loading: false,
+              error: null,
+            }),
           );
           resolve(data);
         })
@@ -26,13 +36,33 @@ export const usePokeList = (refresh = false) => {
     });
   }, [dispatch]);
 
+  const GetMoreData = () => {
+    return new Promise((resolve, reject) => {
+      GetMoreDataPoke(urlMore)
+        .then((data) => {
+          dispatch(
+            setListPoke({
+              data: pokeList.concat(data?.results),
+              next: data?.next,
+              loading: false,
+              error: null,
+            }),
+          );
+          resolve(data);
+        })
+        .catch(() => {
+          dispatch(setListPoke({data: null, loading: false, error: true}));
+          reject(false);
+        });
+    });
+  };
   useEffect(() => {
     if (refresh || error) {
       GetPokeList();
     }
     return () => {};
   }, [GetPokeList, error, refresh]);
-  return {pokeList, error, loading};
+  return {pokeList, error, loading, GetMoreData};
 };
 
 export const useDetailPoke = (name) => {

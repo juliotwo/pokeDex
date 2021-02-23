@@ -19,6 +19,7 @@ function poke(state = initialState, action) {
           data: action.payload.data,
           loading: action.payload.loading,
           error: action.payload.error,
+          next: action.payload.next,
         },
       });
     }

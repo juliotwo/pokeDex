@@ -1,5 +1,3 @@
 export const container = {
-  container: {
-    flex: 1,
-  },
+  flex: 1,
 };

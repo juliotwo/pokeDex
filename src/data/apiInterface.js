@@ -7,3 +7,6 @@ export const GetPokemonList = () => {
 export const GetPokemonDetail = (name) => {
   return fetch(urls.pokemonDetail(name));
 };
+export const GetMoreDataPoke = (url) => {
+  return fetch(url);
+};
