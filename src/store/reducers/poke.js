@@ -1,4 +1,4 @@
-import {SET_LIST_POKE} from '_store/actions/pokeActions';
+import {SET_DETAIL_POKE, SET_LIST_POKE} from '_store/actions/pokeActions';
 
 import {setToState} from '../actionsStore';
 
@@ -8,6 +8,7 @@ const initialState = {
     loading: false,
     error: null,
   },
+  pokeDetail: {},
 };
 
 function poke(state = initialState, action) {
@@ -18,6 +19,19 @@ function poke(state = initialState, action) {
           data: action.payload.data,
           loading: action.payload.loading,
           error: action.payload.error,
+        },
+      });
+    }
+    case SET_DETAIL_POKE: {
+      return setToState(state, {
+        pokeDetail: {
+          ...state.pokeDetail,
+          [action.payload.name]: {
+            ...state.pokeDetail[action.payload.name],
+            detail: action.payload.data,
+          },
+          error: action.payload.error,
+          loading: action.payload.loading,
         },
       });
     }

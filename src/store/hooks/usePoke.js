@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from 'react-redux';
-import {setListPoke} from '_store/actions/pokeActions';
+import {setListPoke, seDetailPoke} from '_store/actions/pokeActions';
 
-import {GetPokemonList} from '_data/apiInterface';
+import {GetPokemonList, GetPokemonDetail} from '_data/apiInterface';
 import {useCallback, useEffect} from 'react';
 
 export const usePokeList = (refresh = false) => {
@@ -33,4 +33,33 @@ export const usePokeList = (refresh = false) => {
     return () => {};
   }, [GetPokeList, error, refresh]);
   return {pokeList, error, loading};
+};
+
+export const useDetailPoke = (name) => {
+  const pokeDetail = useSelector((state) => state.poke.pokeDetail);
+
+  const dispatch = useDispatch();
+
+  const GetDetailPokemon = useCallback(() => {
+    return new Promise((resolve, reject) => {
+      GetPokemonDetail(name)
+        .then((data) => {
+          dispatch(
+            seDetailPoke({name, data: data, loading: false, error: null}),
+          );
+          resolve(data);
+        })
+        .catch(() => {
+          dispatch(seDetailPoke({data: null, loading: false, error: true}));
+          reject(false);
+        });
+    });
+  }, [dispatch, name]);
+  useEffect(() => {
+    if (!pokeDetail[name]) {
+      GetDetailPokemon();
+    }
+    return () => {};
+  }, [GetDetailPokemon, name, pokeDetail]);
+  return {pokeDetail};
 };
